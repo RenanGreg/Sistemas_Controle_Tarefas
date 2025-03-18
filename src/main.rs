@@ -1,23 +1,27 @@
-use axum::{Router, routing::get}; 
-use std::net::SocketAddr; 
+use axum::{routing::get, Router};
+use db::connect_db;
+use std::net::SocketAddr;
 
+mod auth;
+mod db;
+mod models;
 mod routes;
-mod db; 
-mod auth; 
-mod models; 
+mod handlers;
+mod middleware; 
 
-#[tokio::main] 
+
+#[tokio::main]
 
 async fn main() {
-  let app = Router::new()
-    .route("/", get(|| async { "Sistema de Controle de Tarefas" })); 
+    let pool = db::connect_db().await; //conecta ao banco de dados
 
-  let addr = SocketAddr::from(([127, 0, 0, 1], 3000)); 
-  println!("Servidor rodando em http://{}",addr); 
+    let app = routes::create_router(pool); //carrega as rotas
 
-  axum::Server::bind(&addr); 
-  .Serve(app.into_make_service()) 
-  .await
-  .unwrap(); 
-  
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("Servidor rodando em http://{}", addr);
+
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }

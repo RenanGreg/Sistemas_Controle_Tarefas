@@ -4,6 +4,24 @@ version = "0.1.0"
 authors = ["runner"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "src/handlers.rs"
+
+[[bin]] 
+name = "my_project"
+path = "src/main.rs"
+
 
 [dependencies]
+axum = "0.6"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+sqlx = { version = "0.6", features = ["sqlite", "runtime-tokio-rustls"] }
+jsonwebtoken = "8"
+dotenvy = "0.15"
+argon2 = "0.5"
+rand = "0.8"
+chrono = "0.4"
+
+
+
