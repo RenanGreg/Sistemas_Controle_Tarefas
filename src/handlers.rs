@@ -4,9 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::middleware::AuthenticatedUser;
 use crate::auth::{hash_senha, verificar_senha, gerar_token};
 
-// ==========================
-// Modelos para Usuários
-// ==========================
+
 
 #[derive(Deserialize)]
 pub struct NovoUsuario {
@@ -27,16 +25,14 @@ pub struct AuthResponse {
     pub token: Option<String>,
 }
 
-// ==========================
-// Funções de Usuário
-// ==========================
 
-/// Registra um novo usuário no sistema.
+
+/// Registra usuário no sistema.
 pub async fn register_user(
     State(pool): State<SqlitePool>,
     Json(payload): Json<NovoUsuario>,
 ) -> Result<Json<AuthResponse>, axum::http::StatusCode> {
-    // Gera o hash da senha utilizando Argon2.
+    
     let senha_hash = hash_senha(&payload.senha)
         .map_err(|_| axum::http::StatusCode::INTERNAL_SERVER_ERROR)?;
 
@@ -65,7 +61,7 @@ pub async fn login_user(
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<AuthResponse>, axum::http::StatusCode> {
     let user = sqlx::query_as!(
-        crate::models::Usuario, // Certifique-se de que o modelo Usuario esteja definido em models.rs
+        crate::models::Usuario, 
         "SELECT * FROM usuarios WHERE email = ?",
         payload.email
     )
@@ -85,9 +81,6 @@ pub async fn login_user(
     Err(axum::http::StatusCode::UNAUTHORIZED)
 }
 
-// ==========================
-// Modelos para Tarefas
-// ==========================
 
 #[derive(Serialize, sqlx::FromRow)]
 pub struct Tarefa {
@@ -104,11 +97,9 @@ pub struct NovaTarefa {
     pub descricao: String,
 }
 
-// ==========================
-// Funções de Tarefa
-// ==========================
 
-/// Cria uma nova tarefa para o usuário autenticado.
+
+/// Cria tarefa
 pub async fn create_task(
     State(pool): State<SqlitePool>,
     AuthenticatedUser(email): AuthenticatedUser,
@@ -134,7 +125,7 @@ pub async fn create_task(
     Json("Tarefa criada com sucesso!".to_string())
 }
 
-/// Lista as tarefas do usuário autenticado.
+/// Lista as tarefas 
 pub async fn get_tasks(
     State(pool): State<SqlitePool>,
     AuthenticatedUser(email): AuthenticatedUser,
@@ -160,7 +151,7 @@ pub async fn get_tasks(
     Json(tarefas)
 }
 
-/// Atualiza uma tarefa do usuário autenticado.
+/// Atualiza tarefa.
 pub async fn update_task(
     State(pool): State<SqlitePool>,
     AuthenticatedUser(email): AuthenticatedUser,
@@ -187,7 +178,7 @@ pub async fn update_task(
     Json("Tarefa atualizada com sucesso!".to_string())
 }
 
-/// Deleta uma tarefa do usuário autenticado.
+/// Deleta uma tarefa
 pub async fn delete_task(
     State(pool): State<SqlitePool>,
     AuthenticatedUser(email): AuthenticatedUser,
