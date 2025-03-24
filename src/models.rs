@@ -1,35 +1,35 @@
-use serde::{Deserialize, Serialize}; 
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, sqlx::FromRow)] 
-pub struct Usuario{
-  pub id: i32,
-  pub nome: String, 
-  pub email: String,  
-  pub senha_hash: String, 
-  pub tipo: String,
-} 
-
-#[derive(Deserialize)]
-pub struct NovoUsuario{
-  pub nome: String,
-  pub email: String,
-  pub senha: String, 
-} 
+#[derive(Serialize, sqlx::FromRow)]
+pub struct Usuario {
+    pub id: i32,
+    pub nome: String,
+    pub email: String,
+    pub senha_hash: String,
+    pub tipo: String,
+}
 
 #[derive(Deserialize)]
-pub struct LoginRequest{
-  pub email: String,
-  pub senha: String,
-} 
+pub struct NovoUsuario {
+    pub nome: String,
+    pub email: String,
+    pub senha: String,
+}
 
-#[derive(Serialize)] 
-pub struct AuthResponse{
-  pub message: String,
-  pub token: Option<String>,
+#[derive(Deserialize)]
+pub struct LoginRequest {
+    pub email: String,
+    pub senha: String,
+}
+
+#[derive(Serialize)]
+pub struct AuthResponse {
+    pub message: String,
+    pub token: Option<String>,
 }
 
 #[derive(Serialize, sqlx::FromRow)]
-pub struct Tarefa {
+pub struct Tarefas {
     pub id: i32,
     pub titulo: String,
     pub descricao: String,

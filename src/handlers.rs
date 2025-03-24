@@ -83,7 +83,7 @@ pub async fn login_user(
 
 
 #[derive(Serialize, sqlx::FromRow)]
-pub struct Tarefa {
+pub struct Tarefas {
     pub id: i32,
     pub titulo: String,
     pub descricao: String,

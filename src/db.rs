@@ -1,14 +1,17 @@
 use dotenvy::dotenv;
-use sqlx::{Pool, Sqlite, SqlitePool};
+use sqlx::SqlitePool;
 use std::env;
 
-pub async fn connect_db() -> sqlx::SqlitePool {
-    let database_url = "sqlite://database.db";
-    let pool = sqlx::SqlitePool::connect(database_url)
+pub async fn connect_db() -> SqlitePool {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL")
+        .expect("DATABASE_URL não definida no .env");
+
+    let pool = SqlitePool::connect(&database_url)
         .await
         .expect("Falha ao conectar ao banco de dados");
 
-    // Executa a migration
     sqlx::query(include_str!("../migrations/001_create_tables.sql"))
         .execute(&pool)
         .await

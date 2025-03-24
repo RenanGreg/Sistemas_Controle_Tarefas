@@ -1,10 +1,12 @@
 hidden = ["target", ".cargo"]
-
-entrypoint = "src/main.rs"
 modules = ["rust-stable"]
+run = "cargo run"
 
 [nix]
 channel = "stable-24_05"
 
 [gitHubImport]
 requiredFiles = [".replit"]
+
+[deployment]
+run = ["sh", "-c", "cargo run"]
