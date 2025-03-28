@@ -1,22 +1,13 @@
- use axum::{
-     routing::{get, post, put, delete},
-     Router,
- };
- use crate::handlers::{ 
-     register_user, 
-     login_user, 
-     create_task, 
-     get_tasks, 
-     update_task, 
-     delete_task 
- };
+use axum::{
+    routing::{get, post, put, delete},
+    Router,
+};
+use sqlx::SqlitePool;
+use crate::handlers::{criar_livro, get_livro, update_livro, delete_livro};
 
-
-pub fn create_router(db: sqlx::SqlitePool) -> Router {
+pub fn create_router(db: SqlitePool) -> Router {
     Router::new()
-        .route("/register", post(register_user))
-        .route("/login", post(login_user))
-        .route("/tasks", post(create_task).get(get_tasks))
-        .route("/tasks/:id", put(update_task).delete(delete_task))
+        .route("/livros", post(create_livro).get(get_livro))
+        .route("/livros/:id", put(update_livro).delete(delete_livro))
         .with_state(db)
 }
