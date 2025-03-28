@@ -1,29 +1,20 @@
-use axum::{routing::get, Router};
-use db::connect_db;
+use axum::Router;
 use std::net::SocketAddr;
-use dotenv::dotenv;
-use std::env;
-use sqlx::SqlitePool; 
-
-mod auth;
 mod db;
 mod models;
-mod routes;
 mod handlers;
-mod middleware; 
-
+mod routes;
 
 #[tokio::main]
-
 async fn main() {
-    dotenv().ok();
-    
-    let pool = db::connect_db().await; //conecta ao banco de dados
+    // Conecta ao banco e executa as migrations
+    let pool = db::connect_db().await;
 
-    let app = routes::create_router(pool); //carrega as rotas
+    // Cria o roteador com as rotas definidas
+    let app = routes::create_router(pool);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    println!("Servidor rodando em http://{}", addr);
+    println!("Servidor rodando em http://127.0.0.1:3000{}", addr); 
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
